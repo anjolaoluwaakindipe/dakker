@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "dakker_development",
+            "group": "dakker",
+            "database": "dakker",
+            "username": "anjolaoluwaakindipe"
+        }
+    ]
+}

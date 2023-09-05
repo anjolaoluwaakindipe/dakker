@@ -1,0 +1,95 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id           String    @id @default(cuid())
+    email        String    @unique
+    firstname    String
+    lastname     String
+    passwordHash String
+    phoneNumber  String?
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+    projects     Project[]
+    fields       Field[]
+    devices      Device[]
+}
+
+model Project {
+    id          String      @id @default(cuid())
+    name        String
+    accessKey   String
+    isActivated Boolean     @default(false)
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+    User        User?       @relation(fields: [userId], references: [id])
+    userId      String?
+    devices     Device[]
+    fields      Field[]
+    dataPoints  DataPoint[]
+
+    @@unique([userId, name])
+}
+
+model Device {
+    id          String      @id @default(cuid())
+    name        String
+    securityKey String
+    isActivated Boolean     @default(false)
+    user        User?       @relation(fields: [userId], references: [id])
+    userId      String?
+    project     Project?    @relation(fields: [projectId], references: [id])
+    projectId   String?
+    dataPoints  DataPoint[]
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+
+    @@unique([projectId, name])
+}
+
+model Field {
+    id         String      @id @default(cuid())
+    name       String
+    dataType   DataType    @default(FLOAT)
+    user       User?       @relation(fields: [userId], references: [id])
+    userId     String?
+    project    Project?    @relation(fields: [projectId], references: [id])
+    projectId  String?
+    dataPoints DataPoint[]
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
+
+    @@unique([name, projectId])
+}
+
+model DataPoint {
+    id           String   @id @default(cuid())
+    stringValue  String?
+    integerValue Int?
+    floatValue   Float?
+    booleanValue Boolean?
+    device       Device?  @relation(fields: [deviceId], references: [id])
+    deviceId     String?
+    field        Field?   @relation(fields: [fieldId], references: [id])
+    fieldId      String?
+    project      Project? @relation(fields: [projectId], references: [id])
+    projectId    String?
+    createdAt    DateTime @default(now())
+}
+
+model Log {
+    id String @id @default(cuid())
+}
+
+enum DataType {
+    STRING
+    BOOLEAN
+    INTEGER
+    FLOAT
+}
