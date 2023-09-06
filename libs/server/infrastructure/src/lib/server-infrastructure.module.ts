@@ -1,6 +1,7 @@
 import {
   JwtUtilService,
   JwtUtilServiceProvider,
+  ProjectRepositoryProvider,
   UnitOfWorkService,
   UnitOfWorkServiceProvider,
   UserRepository,
@@ -13,6 +14,7 @@ import { JwtUtilServiceImpl } from './services/jwt.service';
 import { JwtConfigModule } from './config/jwt/jwt.config';
 import { DbConfigModule } from './config/db/db.config';
 import { UnitOfWorkServiceImpl } from './services/unitOfWork.service';
+import { ProjectRepositoryImpl } from './persistence/project.repository';
 
 @Global()
 @Module({
@@ -22,6 +24,7 @@ import { UnitOfWorkServiceImpl } from './services/unitOfWork.service';
     UserRepositoryProvider({
       useClass: UserRepositoryPrismaImpl,
     }),
+    ProjectRepositoryProvider({ useClass: ProjectRepositoryImpl }),
     UnitOfWorkServiceProvider({ useClass: UnitOfWorkServiceImpl }),
   ],
   exports: [UserRepository, JwtUtilService, UnitOfWorkService],

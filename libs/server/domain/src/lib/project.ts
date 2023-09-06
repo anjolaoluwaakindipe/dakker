@@ -1,4 +1,3 @@
-import { Project as ProjectSchema } from '@prisma/client';
 import {
   Column,
   CreateDateColumn,
@@ -10,10 +9,10 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user';
-import { Device } from './device';
 import { DataPoint } from './dataPoint';
+import { Device } from './device';
 import { Field } from './field';
+import { User } from './user';
 
 // export type Project = ProjectSchema;
 
@@ -34,7 +33,7 @@ export class Project {
   isActivated: boolean;
 
   @ManyToOne(() => User, (user) => user.id)
-  user: User;
+  user: Promise<User>;
 
   @OneToMany(() => Device, (device) => device.id)
   devices: Device[];

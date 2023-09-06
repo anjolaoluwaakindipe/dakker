@@ -1,4 +1,4 @@
-import { Project } from '@dakker/server/domain';
+import { DataType, Project } from '@dakker/server/domain';
 import { InfrastructureProvider, InjectionOptions } from './provider';
 import { Provider } from '@nestjs/common';
 
@@ -9,7 +9,13 @@ export interface ProjectService {
 export type CreateProjectCommand = {
   name: string;
   isActivated: boolean;
+  fields: CreateProjectFieldParam[]
 };
+
+export type CreateProjectFieldParam = {
+    name: string;
+    dataType: DataType;
+}
 
 export type CreateProjectResult = {
   id: string;
@@ -28,8 +34,17 @@ export function ProjectServiceProvider(
 }
 
 export interface ProjectRepository {
-  saveProject(name: string, isActivated: boolean): Project;
+  saveProject(
+    name: string,
+    isActivated: boolean,
+    fields: SaveProjectFieldParam[]
+  ): Promise<Project>;
 }
+
+export type SaveProjectFieldParam = {
+  name: string;
+  dataType: DataType;
+};
 
 export const ProjectRepository = Symbol('ProjectRepository');
 

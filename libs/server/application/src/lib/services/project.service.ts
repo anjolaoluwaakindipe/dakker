@@ -14,12 +14,18 @@ export class ProjectServiceImpl implements ProjectService {
   async createProject(
     command: CreateProjectCommand
   ): Promise<CreateProjectResult> {
+    const savedProject = await this.projectRepo.saveProject(
+      command.name,
+      command.isActivated,
+      command.fields
+    );
+
     return {
-      accessKey: '',
-      id: '',
-      isActivated: false,
-      name: '',
-      userId: '',
+      accessKey: savedProject.accesskey,
+      id: savedProject.id,
+      isActivated: savedProject.isActivated,
+      name: savedProject.name,
+      userId: (await savedProject.user).id,
     };
   }
 }
